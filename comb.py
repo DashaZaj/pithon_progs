@@ -1,12 +1,11 @@
-from itertools import product
+from itertools import permutations
 
-word = input()
-first = word[0]
-last = word[-1]
-prod = list(product(word, repeat=3))
-ans = list()
-for p in prod:
-    ans.append(first+''.join(p)+last)
-ans.sort()
-for a in ans:
-    print(a)
+word = "безличность"
+perm = list(permutations(word))
+ans = 0
+
+for p in perm:
+    cur_word = ''.join(p)
+    if cur_word.count('сть') == 1 and "б" not in cur_word[:5] and "л" not in cur_word[:5] and "и" not in cur_word[:5] and "е" not in cur_word[:5] and "з" not in cur_word[:5]:
+        ans += 1
+print(ans)
