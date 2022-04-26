@@ -1,15 +1,21 @@
-n = int(input())
-k = int(input())
-mask = list(map(int, input().split()))
-
-j=-1
-for i in range(k):
-    if j < mask[i] < n- k + i:
-        j = i
-mask[j] += 1
-for l in range(j+1, k):
-    mask[l] = j+1+l
-
-for x in mask:
-    print(x, end=' ')
-print()
+pp = 46368
+p = 75025
+a = []
+l = 0
+while l <= 1000000000:
+    l = pp + p
+    pp = p
+    p = l
+    a.append(l)
+a = a[:-1]
+print(a)
+ans = []
+for i in range(26, 45):
+    primary = True
+    for j in range(2, int(a[i-26]**0.5)+1):
+        if a[i-26] % j == 0:
+            primary = False
+            break
+    if primary:
+        ans.append([i, a[i-26]])
+print(ans)
