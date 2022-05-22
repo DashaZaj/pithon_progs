@@ -1,31 +1,21 @@
-def can_win(c, n, depth):
-    if c+n >= 49:
+def can_win(x, y, depth):
+    if x**2 + y**2 >= 64:
         return [False, [f"opponent already won"], depth, depth]
     wins = []
     loses = []
 
-    plus3_c = can_win(c+3, n, depth+1)
-    plus3_n = can_win(c, n+3, depth+1)
-    by2_c = can_win(c*2, n, depth+1)
-    by2_n = can_win(c, n*2, depth+1)
+    plus3_x = can_win(x + 3, y, depth + 1)
+    plus2_y = can_win(x, y + 2, depth + 1)
     depth += 1
 
-    if not by2_n[0]:
-        wins.append([True, [f"n*2 + c = {(n*2)+c}"] + by2_n[1], by2_n[2], by2_n[3]])
+    if not plus2_y[0]:
+        wins.append([True, [f"[x;y+2] = {x**2 + (y+2)**2}"] + plus2_y[1], plus2_y[2], plus2_y[3]])
     else:
-        loses.append([False, [f"n*2 + c = {(n*2)+c}"] + by2_n[1], by2_n[2], by2_n[3]])
-    if not by2_c[0]:
-        wins.append([True, [f"c*2 + n = {(c*2)+n}"] + by2_c[1], by2_c[2], by2_c[3]])
+        loses.append([False, [f"[x;y+2] = {x**2 + (y+2)**2}"] + plus2_y[1], plus2_y[2], plus2_y[3]])
+    if not plus3_x[0]:
+        wins.append([True, [f"[x+3;y] = {(x+3)**2 + y**2}"] + plus3_x[1], plus3_x[2], plus3_x[3]])
     else:
-        loses.append([False, [f"c*2 + n = {(c*2)+n}"] + by2_c[1], by2_c[2], by2_c[3]])
-    if not plus3_n[0]:
-        wins.append([True, [f"n+3 + c  = {n + 3 + c}"] + plus3_n[1], plus3_n[2], plus3_n[3]])
-    else:
-        loses.append([False, [f"n+3 + c = {n+3 + c}"] + plus3_n[1], plus3_n[2], plus3_n[3]])
-    if not plus3_c[0]:
-        wins.append([True, [f"c+3 + n = {n + 3 + c}"] + plus3_c[1], plus3_c[2], plus3_c[3]])
-    else:
-        loses.append([False, [f"c+3 + n = {n + 3 + c}"] + plus3_c[1], plus3_c[2], plus3_c[3]])
+        loses.append([False, [f"[x+3;y] = {(x+3)**2 + y**2}"] + plus3_x[1], plus3_x[2], plus3_x[3]])
 
     if len(wins) != 0:
         minwin_idx = 0
@@ -44,15 +34,13 @@ def can_win(c, n, depth):
 
     return [
         False,
-        [[f"even if n+3 = {n+3 + c} opponent will"]+[plus3_n[1]]] +
-        [[f"even if c+3 = {n + 3 + n} opponent will"] + [plus3_c[1]]] +
-        [[f"even if n*2 = {n*2 + c} opponent will"]+[by2_n[1]]] +
-        [[f"even if c*2 = {c*2 + n} opponent will"]+[by2_c[1]]],
+        [[f"even if y+2 = {(y + 2)**2 + x**2} opponent will"] + [plus2_y[1]]] +
+        [[f"even if x+3 = {(x+3)**2 + y**2} opponent will"] + [plus3_x[1]]],
         loses[minloss][2],
         loses[maxloss][3]
         ]
 
 
-for stones in range(1, 39):
-    c_w = can_win(9, stones, 0)
-    print(stones, c_w[0], c_w[-2:])
+for stones in [[2, 3], [-1, 5], [-3, 5], [1, 6], [5, 0], [-1, 3]]:
+    c_w = can_win(stones[0], stones[1], 0)
+    print(stones, c_w)
